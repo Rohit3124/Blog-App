@@ -1,6 +1,20 @@
 import { Link, Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Header = () => {
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+    const localTheme = localStorage.getItem("theme");
+    document.querySelector("html").setAttribute("data-theme", localTheme);
+  }, [theme]);
+
+  const handleToggle = (e) => {
+    e.target.checked ? setTheme("dark") : setTheme("light");
+  };
   return (
     <>
       <div className="navbar bg-base-100 ">
@@ -15,11 +29,13 @@ const Header = () => {
               className="input input-bordered w-24 md:w-auto"
             />
           </div>
-          <label className="grid cursor-pointer place-items-center">
+          <label className="grid cursor-pointer place-items-center ">
             <input
               type="checkbox"
               value="synthwave"
               className="toggle theme-controller bg-base-content col-span-2 col-start-1 row-start-1"
+              checked={theme === "dark"}
+              onChange={handleToggle}
             />
             <svg
               className="stroke-base-100 fill-base-100 col-start-1 row-start-1"
