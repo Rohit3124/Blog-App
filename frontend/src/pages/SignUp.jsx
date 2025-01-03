@@ -1,29 +1,41 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import Joi from "joi";
+import { joiResolver } from "@hookform/resolvers/joi";
+
+const schema = Joi.object({
+  username: Joi.string().min(3).max(255).required(),
+  email: Joi.string().required(),
+  password: Joi.string().min(6).max(100).required(),
+});
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: joiResolver(schema),
+  });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
-  };
-  console.log(formData);
+  const onSubmit = async (data) => {
+    console.log(data);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
-      const data = await res.json();
+      const responseData = await res.json();
     } catch (error) {}
   };
+
   return (
     <div className="w-96 mx-auto mt-20">
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <label className="input input-bordered flex items-center gap-2">
+      <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
+        <label className="input input-bordered flex  items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -36,10 +48,12 @@ const SignUp = () => {
             type="text"
             className="grow"
             placeholder="Username"
-            id="username"
-            onChange={handleChange}
+            {...register("username")}
           />
         </label>
+        {errors.username && (
+          <p className="text-red-500">{errors.username.message}</p>
+        )}
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -54,10 +68,10 @@ const SignUp = () => {
             type="email"
             className="grow"
             placeholder="Email"
-            id="email"
-            onChange={handleChange}
+            {...register("email")}
           />
         </label>
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -75,11 +89,19 @@ const SignUp = () => {
             type="password"
             className="grow"
             placeholder="password"
-            id="password"
-            onChange={handleChange}
+            {...register("password")}
           />
         </label>
-        <button className="btn  btn-active">Sign Up</button>
+        {errors.password && (
+          <p className="text-red-500">{errors.password.message}</p>
+        )}
+        <button className="btn  btn-active" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <span className="loading loading-spinner loading-md"></span>
+          ) : (
+            "Sign Up"
+          )}
+        </button>
       </form>
       <div className="flex gap-2 text-sm mt-5">
         <span>Have an account?</span>
