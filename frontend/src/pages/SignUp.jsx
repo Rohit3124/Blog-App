@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -11,6 +10,7 @@ const schema = Joi.object({
 });
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,8 +20,6 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     try {
       const res = await fetch("/api/user/signup", {
         method: "POST",
@@ -29,6 +27,7 @@ const SignUp = () => {
         body: JSON.stringify(data),
       });
       const responseData = await res.json();
+      if (res.ok) navigate("/");
     } catch (error) {}
   };
 

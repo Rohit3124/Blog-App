@@ -31,7 +31,13 @@ router.post("/signin", async (req, res) => {
     if (!isValid) return res.status(400).send("Invalid email or password");
 
     const token = jwt.sign({ id: user._id }, "Rohit");
-    res.send(token);
+    const { password, ...rest } = user._doc;
+    res
+      .status(200)
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .send(rest);
   } catch (err) {
     console.error("Authentication error:", err);
     res.status(500).send("Something went wrong. Please try again later.");
