@@ -25,14 +25,15 @@ router.post("/signup", async (req, res) => {
   const hashedPassword = await bcryptjs.hash(password, salt);
 
   const newUser = new User({ username, email, password: hashedPassword });
-
   try {
     await newUser.save();
     res
       .status(201)
       .json({ message: "User signed up successfully", user: newUser });
   } catch (err) {
-    res.status(500).send("Error saving the user: " + err.message);
+    res
+      .status(500)
+      .send("An unexpected error occurred. Please try again later.");
   }
 });
 

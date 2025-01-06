@@ -28,7 +28,10 @@ const SignUp = () => {
       });
       const responseData = await res.json();
       if (res.ok) navigate("/");
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      alert(error.message || "Something went wrong. Please try again later.");
+    }
   };
 
   return (
