@@ -2,37 +2,39 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user.modal");
 
 router.use(express.json());
+async function authenticateUser(clear, hashed) {
+  return await bcryptjs.compare(clear, hashed);
+}
 
 function validate(req) {
   const schema = Joi.object({
-    username: Joi.string().min(3).max(255).required(),
-    email: Joi.string().required().email(),
+    email: Joi.string().email().min(3).max(255).required(),
     password: Joi.string().min(6).max(100).required(),
   });
 
   return schema.validate(req);
 }
 
-router.post("/signup", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { username, email, password } = req.body;
-  const salt = await bcryptjs.genSalt(10);
-  const hashedPassword = await bcryptjs.hash(password, salt);
-
-  const newUser = new User({ username, email, password: hashedPassword });
-
   try {
-    await newUser.save();
-    res
-      .status(201)
-      .json({ message: "User signed up successfully", user: newUser });
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("Invalid email or password");
+
+    const isValid = await authenticateUser(req.body.password, user.password);
+    if (!isValid) return res.status(400).send("Invalid email or password");
+
+    const token = jwt.sign({ id: user._id }, "Rohit");
+    res.send(token);
   } catch (err) {
-    res.status(500).send("Error saving the user: " + err.message);
+    console.error("Authentication error:", err);
+    res.status(500).send("Something went wrong. Please try again later.");
   }
 });
 

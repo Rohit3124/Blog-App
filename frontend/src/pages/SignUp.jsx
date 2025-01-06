@@ -23,7 +23,7 @@ const SignUp = () => {
     console.log(data);
 
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/user/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
