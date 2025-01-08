@@ -31,7 +31,7 @@ router.post("/signin", async (req, res) => {
     const isValid = await authenticateUser(req.body.password, user.password);
     if (!isValid) return res.status(400).send("Invalid email or password");
 
-    const token = jwt.sign({ id: user._id }, config.get("jwtSecretKey"));
+    const token = user.generateAuthToken();
     const { password, ...rest } = user._doc;
     res
       .status(200)
