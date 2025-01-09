@@ -1,7 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
+import { userDataContext } from "../context/userContext";
 
 const schema = Joi.object({
   email: Joi.string().required(),
@@ -10,6 +12,7 @@ const schema = Joi.object({
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useContext(userDataContext);
   const {
     register,
     handleSubmit,
@@ -27,7 +30,10 @@ const SignIn = () => {
       });
 
       const responseData = await res.json();
-      if (res.ok) navigate("/");
+      if (res.ok) {
+        setUser(responseData.username);
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");

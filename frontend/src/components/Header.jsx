@@ -1,7 +1,10 @@
 import { Link, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { userDataContext } from "../context/userContext.jsx";
 
 const Header = () => {
+  const { user, setUser } = useContext(userDataContext);
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
@@ -74,10 +77,14 @@ const Header = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+                {!user ? (
+                  <img
+                    alt="Tailwind CSS Navbar component"
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  />
+                ) : (
+                  <div>{user}</div>
+                )}
               </div>
             </div>
             <ul
@@ -90,12 +97,21 @@ const Header = () => {
                   <span className="badge">New</span>
                 </Link>
               </li>
-              <li>
-                <Link to="sign-in">Sign-in</Link>
-              </li>
-              <li>
-                <Link to="sign-up">Sign-up</Link>{" "}
-              </li>
+
+              {!user ? (
+                <>
+                  <li>
+                    <Link to="sign-in">Sign-in</Link>
+                  </li>
+                  <li>
+                    <Link to="sign-up">Sign-up</Link>{" "}
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <Link>Sign-out</Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
