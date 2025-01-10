@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { userDataContext } from "../context/userContext.jsx";
 
 const Header = () => {
-  const { user, setUser } = useContext(userDataContext);
+  const { user } = useContext(userDataContext);
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
