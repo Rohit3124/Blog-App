@@ -33,12 +33,7 @@ router.post("/signin", async (req, res) => {
 
     const token = user.generateAuthToken();
     const { password, ...rest } = user._doc;
-    res
-      .status(200)
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .send(rest);
+    res.status(200).header("auth-token", user.generateAuthToken()).send(rest);
   } catch (err) {
     console.error("Authentication error:", err);
     res.status(500).send("Something went wrong. Please try again later.");

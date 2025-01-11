@@ -3,6 +3,7 @@ const router = express.Router();
 const Joi = require("joi");
 const bcryptjs = require("bcryptjs");
 const User = require("../models/user.modal");
+const auth = require("../middleware/auth.middleware");
 
 router.use(express.json());
 
@@ -37,4 +38,28 @@ router.post("/signup", async (req, res) => {
   }
 });
 
+router.put("/update/:id", auth, async (req, res) => {
+  if (req.user.id !== req.params.id)
+    return res.status(401).send("You are not allowed to update this user");
+
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+        },
+      },
+      { new: true }
+    );
+    const { password, ...rest } = updatedUser._doc;
+    res.status(200).send(rest);
+  } catch (error) {
+    res.status(500).send("Something went wrong. Please try again later.");
+  }
+});
 module.exports = router;
