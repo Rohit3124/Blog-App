@@ -12,7 +12,7 @@ const schema = Joi.object({
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(userDataContext);
+  const { setUser } = useContext(userDataContext);
   const {
     register,
     handleSubmit,
@@ -31,7 +31,7 @@ const SignIn = () => {
 
       const responseData = await res.json();
       if (res.ok) {
-        setUser(responseData.username);
+        setUser(responseData);
         navigate("/");
       }
     } catch (error) {

@@ -2,6 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { userDataContext } from "../context/userContext.jsx";
+import defaultUserImg from "../assets/defaultUserImg.webp";
 
 const Header = () => {
   const { user } = useContext(userDataContext);
@@ -70,50 +71,40 @@ const Header = () => {
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </label>
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="w-10 rounded-full">
-                {!user ? (
+          {!user ? (
+            <div className="btn ">
+              <Link to="sign-in">Sign-In</Link>
+            </div>
+          ) : (
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
+                <div className="w-10 rounded-full">
                   <img
                     alt="Tailwind CSS Navbar component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    src={defaultUserImg}
                   />
-                ) : (
-                  <div>{user}</div>
-                )}
+                </div>
               </div>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <Link className="justify-between" to="/profile">
-                  Profile
-                  <span className="badge">New</span>
-                </Link>
-              </li>
-
-              {!user ? (
-                <>
-                  <li>
-                    <Link to="sign-in">Sign-in</Link>
-                  </li>
-                  <li>
-                    <Link to="sign-up">Sign-up</Link>{" "}
-                  </li>
-                </>
-              ) : (
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              >
+                <li>
+                  <Link className="justify-between" to="/profile">
+                    Profile
+                    <span className="badge">New</span>
+                  </Link>
+                </li>
                 <li>
                   <Link>Sign-out</Link>
                 </li>
-              )}
-            </ul>
-          </div>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
       <Outlet />
