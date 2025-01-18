@@ -1,11 +1,12 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { userDataContext } from "../context/userContext.jsx";
 import defaultUserImg from "../assets/defaultUserImg.webp";
 
 const Header = () => {
-  const { user } = useContext(userDataContext);
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(userDataContext);
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
@@ -18,6 +19,20 @@ const Header = () => {
 
   const handleToggle = (e) => {
     e.target.checked ? setTheme("dark") : setTheme("light");
+  };
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUser(null);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
   return (
     <>
@@ -100,7 +115,7 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link>Sign-out</Link>
+                  <Link onClick={handleSignout}>Sign-out</Link>
                 </li>
               </ul>
             </div>

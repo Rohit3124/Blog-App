@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { userDataContext } from "../context/userContext.jsx";
+import { useNavigate } from "react-router-dom";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm } from "react-hook-form";
@@ -12,7 +13,8 @@ const schema = Joi.object({
   password: Joi.string().min(6).max(100).required(),
 });
 const UserProfile = () => {
-  const { user } = useContext(userDataContext);
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(userDataContext);
   const {
     register,
     handleSubmit,
@@ -62,6 +64,20 @@ const UserProfile = () => {
     } catch (error) {
       console.error("Error during delete", error);
       alert(error.message || "Something went wrong. Please try again later.");
+    }
+  };
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUser(null);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
   return (
@@ -129,7 +145,9 @@ const UserProfile = () => {
         >
           Delate Account
         </span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span className="cursor-pointer" onClick={handleSignout}>
+          Sign Out
+        </span>
       </div>
       <dialog id="delete_modal" className="modal">
         <div className="modal-box w-1/3 max-w-xl ">

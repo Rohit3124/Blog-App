@@ -73,4 +73,11 @@ router.delete("/delete/:id", auth, async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+router.post("/signout", async (req, res) => {
+  try {
+    res.status(200).send("User has been signed out");
+  } catch (error) {
+    res.status(500).send("Something went wrong. Please try again later.");
+  }
+});
 module.exports = router;
