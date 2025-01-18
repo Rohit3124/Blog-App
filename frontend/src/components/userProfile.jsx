@@ -53,6 +53,17 @@ const UserProfile = () => {
       alert(error.message || "Something went wrong. Please try again later.");
     }
   };
+  const handelDeleteUser = async () => {
+    try {
+      const res = await fetch(`/api/user/delete/${user._id}`, {
+        method: "DELETE",
+      });
+      const responseData = await res.json();
+    } catch (error) {
+      console.error("Error during delete", error);
+      alert(error.message || "Something went wrong. Please try again later.");
+    }
+  };
   return (
     <div className="w-96 mx-auto">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -121,14 +132,22 @@ const UserProfile = () => {
         <span className="cursor-pointer">Sign Out</span>
       </div>
       <dialog id="delete_modal" className="modal">
-        <div className="modal-box w-11/12 max-w-3xl ">
+        <div className="modal-box w-1/3 max-w-xl ">
           <div className="text-center">
             <AiOutlineExclamationCircle className="h-14 w-14  text-gray-400 mb-4 mx-auto" />
-          </div>
-          <div className="modal-action">
-            <form method="dialog">
-              <button className="btn">Close</button>
-            </form>
+            <h3 className="mb-5 text-lg text-gray-500">
+              Are you sure you want to delete your account?
+            </h3>
+            <div className="flex justify-center gap-5">
+              <form method="dialog">
+                <button className="btn btn-error" onClick={handelDeleteUser}>
+                  Yes, I'm sure
+                </button>
+              </form>
+              <form method="dialog">
+                <button className="btn">No, cancel</button>
+              </form>
+            </div>
           </div>
         </div>
       </dialog>
