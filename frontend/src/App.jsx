@@ -3,10 +3,8 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Header from "./components/header";
-import Dashboard from "./pages/Dashboard";
-import PrivateRoute from "./components/privateRoute";
-import userProfile from "./components/userProfile";
 import UserProfile from "./components/userProfile";
+import CreatePost from "./pages/createPost";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -30,15 +28,9 @@ const App = () => {
           path: "profile",
           element: <UserProfile />,
         },
-
         {
-          element: <PrivateRoute />,
-          children: [
-            {
-              path: "dashboard",
-              element: <Dashboard />,
-            },
-          ],
+          path: "create-post",
+          element: <CreatePost />,
         },
       ],
     },

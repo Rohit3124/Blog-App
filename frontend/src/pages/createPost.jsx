@@ -1,0 +1,46 @@
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+const CreatePost = () => {
+  return (
+    <div className="p-3 max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
+      <form className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row justify-between">
+          <input
+            type="text"
+            className="flex-1 input input-bordered"
+            placeholder="Title"
+            id="title"
+          />
+          <select className="select select-bordered" defaultValue="">
+            <option value="" disabled>
+              Select a category
+            </option>
+            <option value="javascript">JavaScript</option>
+            <option value="reactjs">React.js</option>
+            <option value="nextjs">Next.js</option>
+          </select>
+        </div>
+        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+          <input
+            type="file"
+            className="file-input file-input-bordered w-full max-w-xs"
+          />
+          <button type="button" className="btn btn-outline">
+            Upload image
+          </button>
+        </div>
+        <ReactQuill
+          theme="snow"
+          placeholder="write something..."
+          className="h-72 mb-12"
+        />
+        <button type="submit" className="btn btn-active">
+          Publish
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default CreatePost;

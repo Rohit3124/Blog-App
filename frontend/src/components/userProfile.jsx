@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { userDataContext } from "../context/userContext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm } from "react-hook-form";
@@ -151,6 +151,11 @@ const UserProfile = () => {
             "Update"
           )}
         </button>
+        {user.isAdmin && (
+          <Link to="/create-post">
+            <button className="btn btn-active w-full">create a post</button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span
