@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
+const postRoutes = require("./routes/post.route");
 const cookieParser = require("cookie-parser");
 
 if (!config.get("jwtSecretKey")) {
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/post", postRoutes);
 
 mongoose
   .connect("mongodb://localhost/blog")
