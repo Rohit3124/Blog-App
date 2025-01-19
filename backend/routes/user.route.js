@@ -17,14 +17,18 @@ function validate(req) {
   return schema.validate(req);
 }
 
+async function hashPassword(password) {
+  const salt = await bcryptjs.genSalt(10);
+  return bcryptjs.hash(password, salt);
+}
+
 router.post("/signup", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const { username, email, password } = req.body;
-  const salt = await bcryptjs.genSalt(10);
-  const hashedPassword = await bcryptjs.hash(password, salt);
 
+  const hashedPassword = await hashPassword(password);
   const newUser = new User({ username, email, password: hashedPassword });
   try {
     await newUser.save();
@@ -44,18 +48,22 @@ router.put("/update/:id", auth, async (req, res) => {
 
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+
+  const { username, email, password } = req.body;
+  const hashedPassword = await hashPassword(password);
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
-          username: req.body.username,
-          email: req.body.email,
-          password: req.body.password,
+          username,
+          email,
+          password: hashedPassword,
         },
       },
       { new: true }
     );
+
     const { password, ...rest } = updatedUser._doc;
     res.status(200).send(rest);
   } catch (error) {
@@ -68,14 +76,14 @@ router.delete("/delete/:id", auth, async (req, res) => {
 
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.status(200).send("User has been deleted");
+    res.status(200).json("User has been deleted");
   } catch (error) {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
 router.post("/signout", async (req, res) => {
   try {
-    res.status(200).send("User has been signed out");
+    res.clearCookie("auth_token").status(200).json("User has been signed out");
   } catch (error) {
     res.status(500).send("Something went wrong. Please try again later.");
   }

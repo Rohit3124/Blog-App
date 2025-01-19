@@ -4,12 +4,14 @@ const app = express();
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
+const cookieParser = require("cookie-parser");
 
 if (!config.get("jwtSecretKey")) {
   throw new Error("FATAL ERROR: jwtSecretKey is not defined");
 }
 
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 

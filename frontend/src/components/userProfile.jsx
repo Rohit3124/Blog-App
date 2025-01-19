@@ -19,6 +19,7 @@ const UserProfile = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm({
     resolver: joiResolver(schema),
     defaultValues: {
@@ -26,6 +27,14 @@ const UserProfile = () => {
       email: user.email,
     },
   });
+  useEffect(() => {
+    if (user) {
+      reset({
+        username: user.username,
+        email: user.email,
+      });
+    }
+  }, [user, reset]);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const filePickerRef = useRef();
@@ -61,6 +70,10 @@ const UserProfile = () => {
         method: "DELETE",
       });
       const responseData = await res.json();
+      if (res.ok) {
+        setUser(null);
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error during delete", error);
       alert(error.message || "Something went wrong. Please try again later.");
@@ -77,7 +90,8 @@ const UserProfile = () => {
         navigate("/");
       }
     } catch (error) {
-      console.log(error.message);
+      console.error("Error during sign-out", error);
+      alert(error.message || "Something went wrong. Please try again later.");
     }
   };
   return (
