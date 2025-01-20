@@ -5,18 +5,37 @@ import { Link } from "react-router-dom";
 const Posts = () => {
   const { user } = useContext(userDataContext);
   const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch(`/api/post/getposts?userId=${user._id}`);
         const data = await res.json();
-        if (res.ok) setUserPosts(data.posts);
+        if (res.ok) {
+          setUserPosts(data.posts);
+          if (data.posts.length < 9) setShowMore(false);
+        }
       } catch (error) {
         console.log(error.message);
       }
     };
     if (user.isAdmin) fetchPosts();
   }, [user._id]);
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+    try {
+      const res = await fetch(
+        `/api/post/getposts?userId=${user._id}&startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if (data.posts.length < 9) setShowMore(false);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div>
       <div className="overflow-x-auto">
@@ -67,6 +86,14 @@ const Posts = () => {
             ))}
           </tbody>
         </table>
+        {showMore && (
+          <button
+            className="w-full text-teal-500 self-center text-sm py-7"
+            onClick={handleShowMore}
+          >
+            Show more
+          </button>
+        )}
       </div>
     </div>
   );
