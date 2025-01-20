@@ -131,9 +131,11 @@ const Header = () => {
                     </span>
                   </Link>
                 </li>
-                <li>
-                  <Link to="/posts">Posts</Link>
-                </li>
+                {user.isAdmin && (
+                  <li>
+                    <Link to="/posts">Posts</Link>
+                  </li>
+                )}
                 <li>
                   <Link onClick={handleSignout}>Sign-out</Link>
                 </li>
