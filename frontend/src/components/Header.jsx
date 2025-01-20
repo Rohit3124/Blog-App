@@ -126,8 +126,13 @@ const Header = () => {
                 <li>
                   <Link className="justify-between" to="/profile">
                     Profile
-                    <span className="badge">New</span>
+                    <span className="badge">
+                      {user.isAdmin ? "admin" : "user"}
+                    </span>
                   </Link>
+                </li>
+                <li>
+                  <Link to="/posts">Posts</Link>
                 </li>
                 <li>
                   <Link onClick={handleSignout}>Sign-out</Link>

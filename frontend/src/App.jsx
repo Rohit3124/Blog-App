@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp";
 import Header from "./components/header";
 import UserProfile from "./components/userProfile";
 import CreatePost from "./pages/createPost";
+import Posts from "./pages/posts";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const App = () => {
         {
           path: "create-post",
           element: <CreatePost />,
+        },
+        {
+          path: "posts",
+          element: <Posts />,
         },
       ],
     },
