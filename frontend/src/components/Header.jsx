@@ -6,7 +6,7 @@ import defaultUserImg from "../assets/defaultUserImg.webp";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(userDataContext);
+  const { user, setUser, setIsLoading } = useContext(userDataContext);
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
@@ -22,6 +22,7 @@ const Header = () => {
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    setIsLoading(false);
   }, [setUser]);
 
   useEffect(() => {
