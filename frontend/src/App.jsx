@@ -10,6 +10,7 @@ import Posts from "./pages/posts";
 import OnlyAdminPrivateRoute from "./components/onlyAdminPrivateRoute";
 import UpdatePost from "./pages/updatePost";
 import Users from "./components/users";
+import PostPage from "./pages/postPage";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/posts/update-post/:postId" element={<UpdatePost />} />
         </Route>
         <Route path="/users" element={<Users />} />
+        <Route path="/post/:postSlug" element={<PostPage />} />
       </Routes>
     </BrowserRouter>
   );
