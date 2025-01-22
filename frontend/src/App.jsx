@@ -11,6 +11,7 @@ import OnlyAdminPrivateRoute from "./components/onlyAdminPrivateRoute";
 import UpdatePost from "./pages/updatePost";
 import Users from "./components/users";
 import PostPage from "./pages/postPage";
+import Search from "./pages/search";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         </Route>
         <Route path="/users" element={<Users />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </BrowserRouter>
   );

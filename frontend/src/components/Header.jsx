@@ -1,12 +1,14 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import { userDataContext } from "../context/userContext.jsx";
 import defaultUserImg from "../assets/defaultUserImg.webp";
 
 const Header = () => {
+  const path = useLocation().pathname;
+  const location = useLocation();
   const navigate = useNavigate();
   const { user, setUser, setIsLoading } = useContext(userDataContext);
+  const [searchTerm, setSearchTerm] = useState();
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
@@ -50,6 +52,22 @@ const Header = () => {
       console.log(error.message);
     }
   };
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      const urlParams = new URLSearchParams(location.search);
+      urlParams.set("searchTerm", searchTerm.trim()); // Add the trimmed search term
+      const searchQuery = urlParams.toString();
+      navigate(`/search?${searchQuery}`);
+    }
+  };
   return (
     <>
       <div className="navbar bg-base-100 ">
@@ -57,13 +75,15 @@ const Header = () => {
           <a className="btn btn-ghost text-xl">Blog App</a>
         </div>
         <div className="flex-none gap-2">
-          <div className="form-control">
+          <form className="form-control" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Search"
               className="input input-bordered w-24 md:w-auto"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
+          </form>
           <label className="grid cursor-pointer place-items-center ">
             <input
               type="checkbox"
