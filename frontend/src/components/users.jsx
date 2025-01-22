@@ -39,23 +39,18 @@ const Users = () => {
     }
   };
   const handelDeleteUser = async () => {
-    //   try {
-    //     const res = await fetch(
-    //       `/api/user/deleteuser/${userIdToDelete}/${user._id}`,
-    //       {
-    //         method: "DELETE",
-    //       }
-    //     );
-    //     const responseData = await res.json();
-    //     if (res.ok) {
-    //       setUserPosts((prev) =>
-    //         prev.filter((post) => post._id !== postIdToDelete)
-    //       );
-    //     }
-    //   } catch (error) {
-    //     console.error("Error during delete", error);
-    //     alert(error.message || "Something went wrong. Please try again later.");
-    //   }
+    try {
+      const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+        method: "DELETE",
+      });
+      const responseData = await res.json();
+      if (res.ok) {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+      }
+    } catch (error) {
+      console.error("Error during delete", error);
+      alert(error.message || "Something went wrong. Please try again later.");
+    }
   };
   return (
     <div>

@@ -71,7 +71,7 @@ router.put("/update/:id", auth, async (req, res) => {
   }
 });
 router.delete("/delete/:id", auth, async (req, res) => {
-  if (req.user.id !== req.params.id)
+  if (!req.user.isAdmin && req.user.id !== req.params.id)
     return res.status(401).send("You are not allowed to update this user");
 
   try {
@@ -126,4 +126,5 @@ router.get("/getusers", auth, async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+
 module.exports = router;
