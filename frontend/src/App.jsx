@@ -6,7 +6,7 @@ import Header from "./components/header";
 import UserProfile from "./components/userProfile";
 import PrivateRoute from "./components/privateRoute";
 import CreatePost from "./pages/createPost";
-import Posts from "./pages/posts";
+import AdminPosts from "./pages/adminPosts";
 import OnlyAdminPrivateRoute from "./components/onlyAdminPrivateRoute";
 import UpdatePost from "./pages/updatePost";
 import Users from "./components/users";
@@ -23,7 +23,7 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<UserProfile />} />
         </Route>
-        <Route path="/posts" element={<Posts />} />
+        <Route path="/posts" element={<AdminPosts />} />
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/posts/update-post/:postId" element={<UpdatePost />} />

@@ -3,7 +3,7 @@ import { userDataContext } from "../context/userContext";
 import { Link } from "react-router-dom";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
-const Posts = () => {
+const AdminPosts = () => {
   const { user } = useContext(userDataContext);
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
@@ -150,4 +150,4 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default AdminPosts;
