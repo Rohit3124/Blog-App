@@ -85,4 +85,25 @@ router.delete("/deletepost/:postId/:userId", auth, async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+router.put("/updatepost/:postId/:userId", auth, async (req, res) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return res.status(401).send("You are not allowed to update this post");
+  }
+  try {
+    const updatedpost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.title,
+          category: req.body.category,
+          content: req.body.content,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json("The post has been updated");
+  } catch (error) {
+    res.status(500).send("Something went wrong. Please try again later.");
+  }
+});
 module.exports = router;
