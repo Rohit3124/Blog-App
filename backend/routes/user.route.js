@@ -88,4 +88,42 @@ router.post("/signout", async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+router.get("/getusers", auth, async (req, res) => {
+  if (!req.user.isAdmin)
+    return res.status(401).send("You are not allowed to see all user");
+  try {
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortDirection = req.query.order === "asc" ? 1 : -1;
+
+    const users = await User.find()
+      .sort({ createdAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+
+    const usersWithoutPassword = users.map((user) => {
+      const { password, ...rest } = user._doc;
+      return rest;
+    });
+    const totalUsers = await User.countDocuments();
+    const now = new Date();
+
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const lastMonthUsers = await User.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    res.status(200).json({
+      users: usersWithoutPassword,
+      totalUsers,
+      lastMonthUsers,
+    });
+  } catch (error) {
+    res.status(500).send("Something went wrong. Please try again later.");
+  }
+});
 module.exports = router;
